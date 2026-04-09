@@ -5,15 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class SignUpRequestDto {
-
+public class LoginRequest {
     @Email
     @NotBlank
     private String email;
 
     @NotBlank
     private String password;
-
-    @NotBlank
-    private String userRole;
 }
