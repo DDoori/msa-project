@@ -2,8 +2,8 @@ package com.example.userservice.application;
 
 import com.example.userservice.domain.User;
 import com.example.userservice.domain.UserRole;
-import com.example.userservice.dto.LoginRequestDto;
-import com.example.userservice.dto.SignUpRequestDto;
+import com.example.userservice.dto.LoginRequest;
+import com.example.userservice.dto.SignUpRequest;
 import com.example.userservice.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
-    public void signUp(SignUpRequestDto request){
+    public void signUp(SignUpRequest request){
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
@@ -27,7 +27,7 @@ public class UserService {
         ));
     }
 
-    public void login(LoginRequestDto request){
+    public void login(LoginRequest request){
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
 
