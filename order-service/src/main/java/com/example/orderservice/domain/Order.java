@@ -38,4 +38,11 @@ public class Order {
         this.quantity = quantity;
         this.status = OrderStatus.PENDING;
     }
+
+    public void cancel() {
+        if (this.status == OrderStatus.CANCELLED) {
+            throw new IllegalArgumentException("이미 취소된 주문입니다.");
+        }
+        this.status = OrderStatus.CANCELLED;
+    }
 }
