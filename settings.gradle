@@ -1,0 +1,5 @@
+rootProject.name = 'msa-project'
+include 'user-service'
+include 'product-service'
+include 'order-service'
+include 'notification-service'
