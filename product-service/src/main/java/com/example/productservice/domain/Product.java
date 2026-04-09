@@ -21,10 +21,10 @@ public class Product {
     @Column(name = "product_provider_id", updatable = false, nullable = false)
     private UUID providerId;
 
-    @Column(name = "product_name", updatable = false, nullable = false)
+    @Column(name = "product_name", nullable = false)
     private String name;
 
-    @Column(name = "product_stock", updatable = false, nullable = false)
+    @Column(name = "product_stock", nullable = false)
     private int stock;
 
     @Builder
@@ -32,5 +32,16 @@ public class Product {
         this.name = name;
         this.providerId = providerId;
         this.stock = stock;
+    }
+
+    public void decreaseStock(int quantity) {
+        if (this.stock < quantity) {
+            throw new IllegalArgumentException("재고가 부족합니다.");
+        }
+        this.stock -= quantity;
+    }
+
+    public void increaseStock(int quantity) {
+        this.stock += quantity;
     }
 }
