@@ -1,6 +1,7 @@
 package com.example.orderservice.application;
 
 import com.example.orderservice.client.ProductClient;
+import com.example.orderservice.client.ProductResponse;
 import com.example.orderservice.client.StockRequest;
 import com.example.orderservice.domain.Order;
 import com.example.orderservice.dto.OrderCreateCommand;
@@ -48,5 +49,14 @@ public class OrderService {
     public void cancel(UUID id) {
         Order order = findById(id);
         order.cancel();
+    }
+
+    @Transactional(readOnly = true)
+    public List<Order> findByProvider(String userId) {
+        List<ProductResponse> products = productClient.getProductsByProvider(userId);
+        List<UUID> productIds = products.stream()
+                .map(ProductResponse::getId)
+                .toList();
+        return orderRepository.findByProductIdIn(productIds);
     }
 }

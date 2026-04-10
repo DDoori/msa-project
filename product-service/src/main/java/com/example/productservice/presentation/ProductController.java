@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -43,6 +44,17 @@ public class ProductController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(productService.findAll(name, page, size).map(ProductResponse::from));
+    }
+
+    @GetMapping("/provider")
+    public ResponseEntity<List<ProductResponse>> findByProvider(
+            @RequestHeader("X-User-Id") String userId) {
+        return ResponseEntity.ok(
+                productService.findByProviderId(UUID.fromString(userId))
+                        .stream()
+                        .map(ProductResponse::from)
+                        .toList()
+        );
     }
 
     @PostMapping("/{id}/stock/decrease")

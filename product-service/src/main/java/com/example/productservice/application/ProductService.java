@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -39,6 +40,11 @@ public class ProductService {
             return productRepository.findByNameContaining(name, pageable);
         }
         return productRepository.findAll(pageable);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Product> findByProviderId(UUID providerId) {
+        return productRepository.findByProviderId(providerId);
     }
 
     public void decreaseStock(UUID id, ProductStockRequest request) {
