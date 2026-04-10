@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -25,15 +26,19 @@ public class OrderService {
     }
 
     @Transactional(readOnly = true)
+    public List<Order> findAll() {
+        return orderRepository.findAll();
+    }
+
+    @Transactional(readOnly = true)
     public Order findById(UUID id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
     }
 
     @Transactional(readOnly = true)
-    public Page<Order> findByUserId(UUID userId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-        return orderRepository.findByUserId(userId, pageable);
+    public List<Order> findByUserId(UUID userId) {
+        return orderRepository.findByUserId(userId);
     }
 
     public void cancel(UUID id) {
