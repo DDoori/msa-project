@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -31,19 +32,24 @@ public class OrderController {
                 .body(OrderResponse.from(orderService.create(command)));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderResponse> findById(@PathVariable UUID id) {
-        return ResponseEntity.ok(OrderResponse.from(orderService.findById(id)));
-    }
-
     @GetMapping
-    public ResponseEntity<Page<OrderResponse>> findByUserId(
-            @RequestParam UUID userId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(orderService.findByUserId(userId, page, size).map(OrderResponse::from));
+    public ResponseEntity<List<OrderResponse>> findAll() {
+        return ResponseEntity.ok(orderService.findAll().stream()
+                .map(OrderResponse::from)
+                .toList());
     }
 
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponse> findById(@PathVariable UUID orderId) {
+        return ResponseEntity.ok(OrderResponse.from(orderService.findById(orderId)));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<OrderResponse>> findByUserId(@PathVariable UUID userId) {
+        return ResponseEntity.ok(orderService.findByUserId(userId).stream()
+                .map(OrderResponse::from)
+                .toList());
+    }
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<Void> cancel(@PathVariable UUID id) {
         orderService.cancel(id);
