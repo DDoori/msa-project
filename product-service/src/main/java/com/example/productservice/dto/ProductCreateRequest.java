@@ -12,8 +12,5 @@ public class ProductCreateRequest {
     @NotBlank
     private String name;
 
-    @NotNull
-    private UUID providerId;
-
     @Min(0)
     private int stock;}
