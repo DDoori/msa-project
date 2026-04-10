@@ -2,10 +2,9 @@ package com.example.productservice.application;
 
 import com.example.productservice.domain.Product;
 import com.example.productservice.dto.ProductCreateCommand;
-import com.example.productservice.dto.ProductCreateRequest;
 import com.example.productservice.dto.ProductStockRequest;
 import com.example.productservice.repository.ProductRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,12 +26,13 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Product findById(UUID id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("상품을 찾을 수 없습니다."));
     }
 
+    @Transactional(readOnly = true)
     public Page<Product> findAll(String name, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         if (name != null && !name.isBlank()) {

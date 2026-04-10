@@ -3,7 +3,7 @@ package com.example.orderservice.application;
 import com.example.orderservice.domain.Order;
 import com.example.orderservice.dto.OrderCreateCommand;
 import com.example.orderservice.repository.OrderRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,13 +24,13 @@ public class OrderService {
         return orderRepository.save(command.toEntity());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Order findById(UUID id) {
         return orderRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("주문을 찾을 수 없습니다."));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public Page<Order> findByUserId(UUID userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         return orderRepository.findByUserId(userId, pageable);

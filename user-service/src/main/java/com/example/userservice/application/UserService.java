@@ -5,7 +5,7 @@ import com.example.userservice.domain.UserRole;
 import com.example.userservice.dto.LoginRequest;
 import com.example.userservice.dto.SignUpRequest;
 import com.example.userservice.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +27,7 @@ public class UserService {
         ));
     }
 
+    @Transactional(readOnly = true)
     public void login(LoginRequest request){
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
