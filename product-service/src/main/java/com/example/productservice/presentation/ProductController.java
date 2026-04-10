@@ -24,15 +24,18 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping
-    public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductCreateRequest request) {
+    public ResponseEntity<ProductResponse> create(
+            @RequestHeader("X-User-Id") String userId,
+            @Valid @RequestBody ProductCreateRequest request) {
         ProductCreateCommand command = ProductCreateCommand.builder()
                 .name(request.getName())
-                .providerId(request.getProviderId())
+                .providerId(UUID.fromString(userId))
                 .stock(request.getStock())
                 .build();
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ProductResponse.from(productService.create(command)));
     }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findById(@PathVariable UUID id) {
         return ResponseEntity.ok(ProductResponse.from(productService.findById(id)));
