@@ -25,9 +25,9 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request){
-        userService.login(request);
-        return ResponseEntity.ok("로그인 성공");
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
+        String token = userService.login(request);
+        return ResponseEntity.ok(token);
     }
 
 }
