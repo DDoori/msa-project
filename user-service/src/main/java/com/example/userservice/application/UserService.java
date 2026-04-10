@@ -23,7 +23,7 @@ public class UserService {
         userRepository.save(new User(
                 request.getEmail(),
                 request.getPassword(),
-                UserRole.valueOf(request.getUserRole())
+                UserRole.valueOf(request.getRole())
         ));
     }
 
