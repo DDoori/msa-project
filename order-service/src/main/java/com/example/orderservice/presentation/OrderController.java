@@ -52,6 +52,15 @@ public class OrderController {
                 .map(OrderResponse::from)
                 .toList());
     }
+
+    @GetMapping("/provider")
+    public ResponseEntity<List<OrderResponse>> findByProvider(
+            @RequestHeader("X-User-Id") String userId) {
+        return ResponseEntity.ok(orderService.findByProvider(userId).stream()
+                .map(OrderResponse::from)
+                .toList());
+    }
+
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<Void> cancel(@PathVariable UUID id) {
         orderService.cancel(id);
