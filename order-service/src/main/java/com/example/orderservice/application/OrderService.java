@@ -1,5 +1,7 @@
 package com.example.orderservice.application;
 
+import com.example.orderservice.client.ProductClient;
+import com.example.orderservice.client.StockRequest;
 import com.example.orderservice.domain.Order;
 import com.example.orderservice.dto.OrderCreateCommand;
 import com.example.orderservice.repository.OrderRepository;
@@ -20,8 +22,10 @@ import java.util.UUID;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final ProductClient productClient;
 
     public Order create(OrderCreateCommand command) {
+        productClient.decreaseStock(command.getProductId(), new StockRequest(command.getQuantity()));
         return orderRepository.save(command.toEntity());
     }
 
