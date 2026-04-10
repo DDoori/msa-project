@@ -10,9 +10,6 @@ import java.util.UUID;
 public class OrderCreateRequest {
 
     @NotNull
-    private UUID userId;
-
-    @NotNull
     private UUID productId;
 
     @Min(1)
