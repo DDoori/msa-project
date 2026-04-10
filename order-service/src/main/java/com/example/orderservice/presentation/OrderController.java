@@ -22,9 +22,11 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderCreateRequest request) {
+    public ResponseEntity<OrderResponse> create(
+            @RequestHeader("X-User-Id") String userId,
+            @Valid @RequestBody OrderCreateRequest request) {
         OrderCreateCommand command = OrderCreateCommand.builder()
-                .userId(request.getUserId())
+                .userId(UUID.fromString(userId))
                 .productId(request.getProductId())
                 .quantity(request.getQuantity())
                 .build();
