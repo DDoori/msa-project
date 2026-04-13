@@ -9,6 +9,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ProductResponse {
     private UUID id;
+    private UUID providerId;
     private String name;
     private int stock;
 }

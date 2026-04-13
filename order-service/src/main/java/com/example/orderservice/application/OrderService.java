@@ -1,5 +1,6 @@
 package com.example.orderservice.application;
 
+import com.example.orderservice.client.NotificationClient;
 import com.example.orderservice.client.ProductClient;
 import com.example.orderservice.client.ProductResponse;
 import com.example.orderservice.client.StockRequest;
@@ -24,10 +25,24 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductClient productClient;
+    private final NotificationClient notificationClient;
 
     public Order create(OrderCreateCommand command) {
         productClient.decreaseStock(command.getProductId(), new StockRequest(command.getQuantity()));
-        return orderRepository.save(command.toEntity());
+        Order order = orderRepository.save(command.toEntity());
+
+        // 상품의 providerId 조회
+        ProductResponse product = productClient.getProduct(command.getProductId());
+
+        // PROVIDER에게 알림 전송
+        notificationClient.sendNotification(new NotificationClient.NotificationRequest(
+                product.getProviderId(),
+                order.getId(),
+                "ORDER_CREATED",
+                "새 주문이 들어왔습니다. 주문 수량: " + command.getQuantity()
+        ));
+
+        return order;
     }
 
     @Transactional(readOnly = true)
@@ -46,10 +61,6 @@ public class OrderService {
         return orderRepository.findByUserId(userId);
     }
 
-    public void cancel(UUID id) {
-        Order order = findById(id);
-        order.cancel();
-    }
 
     @Transactional(readOnly = true)
     public List<Order> findByProvider(String userId) {
@@ -59,4 +70,16 @@ public class OrderService {
                 .toList();
         return orderRepository.findByProductIdIn(productIds);
     }
+
+    public void cancel(UUID id) {
+        Order order = findById(id);
+        order.cancel();
+        notificationClient.sendNotification(new NotificationClient.NotificationRequest(
+                order.getUserId(),
+                order.getId(),
+                "ORDER_CANCELLED",
+                "주문이 취소되었습니다."
+        ));
+    }
+
 }
