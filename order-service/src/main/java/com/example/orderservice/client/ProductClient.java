@@ -10,7 +10,7 @@ import java.util.UUID;
 public interface ProductClient {
 
     @PostMapping("/products/{id}/stock/decrease")
-    void decreaseStock(@PathVariable UUID id, @RequestBody StockRequest request);
+    ProductResponse decreaseStock(@PathVariable UUID id, @RequestBody StockRequest request);
 
     @GetMapping("/products/provider")
     List<ProductResponse> getProductsByProvider(@RequestHeader("X-User-Id") String userId);

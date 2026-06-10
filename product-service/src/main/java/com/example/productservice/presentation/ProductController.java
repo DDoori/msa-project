@@ -61,10 +61,9 @@ public class ProductController {
     }
 
     @PostMapping("/{id}/stock/decrease")
-    public ResponseEntity<Void> decreaseStock(@PathVariable UUID id,
-                                              @Valid @RequestBody ProductStockRequest request) {
-        productService.decreaseStock(id, request);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<ProductResponse> decreaseStock(@PathVariable UUID id,
+                                                         @Valid @RequestBody ProductStockRequest request) {
+        return ResponseEntity.ok(ProductResponse.from(productService.decreaseStock(id, request)));
     }
 
     @PostMapping("/{id}/stock/increase")
