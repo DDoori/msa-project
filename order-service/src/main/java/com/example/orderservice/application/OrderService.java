@@ -28,13 +28,9 @@ public class OrderService {
     private final NotificationClient notificationClient;
 
     public Order create(OrderCreateCommand command) {
-        productClient.decreaseStock(command.getProductId(), new StockRequest(command.getQuantity()));
+        ProductResponse product = productClient.decreaseStock(command.getProductId(), new StockRequest(command.getQuantity()));
         Order order = orderRepository.save(command.toEntity());
 
-        // 상품의 providerId 조회
-        ProductResponse product = productClient.getProduct(command.getProductId());
-
-        // PROVIDER에게 알림 전송
         notificationClient.sendNotification(new NotificationClient.NotificationRequest(
                 product.getProviderId(),
                 order.getId(),

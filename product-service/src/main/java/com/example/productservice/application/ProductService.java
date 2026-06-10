@@ -47,9 +47,10 @@ public class ProductService {
         return productRepository.findByProviderId(providerId);
     }
 
-    public void decreaseStock(UUID id, ProductStockRequest request) {
+    public Product decreaseStock(UUID id, ProductStockRequest request) {
         Product product = findById(id);
         product.decreaseStock(request.getStock());
+        return product;
     }
 
     public void increaseStock(UUID id, ProductStockRequest request) {
